@@ -1,9 +1,9 @@
 [Unit]
-Description=Regenerate OHFF teletext EP1 page every 5 minutes
+Description=Regenerate OHFF teletext EP1 page periodically
 
 [Timer]
 OnBootSec=1min
-OnUnitActiveSec=5min
+OnUnitActiveSec=3min
 AccuracySec=30s
 Unit=ohff-teletext.service
 

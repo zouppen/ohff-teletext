@@ -85,16 +85,9 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now ohff-teletext.timer
 ```
 
-Run one generation manually and check the output:
-
-```sh
-sudo systemctl start ohff-teletext.service
-stat --format='%s bytes' /run/ohff-teletext/page.ep1
-```
-
-The output path is under `/run`, so it is intentionally recreated after boot.
-Another service can consume `/run/ohff-teletext/page.ep1` after this timer has
-generated it.
+Please note that SystemD cleans runtime directory after the run, so in
+normal operation, no files should be left after running. The temporary file is
+consumed by ylettv-cli command, see `ExecStart=` in the unit file.
 
 ## Tests
 

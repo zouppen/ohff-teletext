@@ -5,11 +5,13 @@ After=network-online.target
 
 [Service]
 Type=oneshot
-DynamicUser=yes
+User=teletext
+Group=teletext
 RuntimeDirectory=ohff-teletext
-RuntimeDirectoryMode=0755
+RuntimeDirectoryMode=0700
 Environment=PYTHONDONTWRITEBYTECODE=1
 ExecStart=/opt/ohff-teletext/.venv/bin/ohff-teletext-page teletext --subpage 12/13 %t/ohff-teletext/page.ep1
+ExecStart=/opt/ylettv-cli/ylettv-cli --config /opt/ylettv-cli/config.ini put --page 999 --subpage 12 --file ${RUNTIME_DIRECTORY}/page.ep1
 UMask=0022
 
 CapabilityBoundingSet=
