@@ -63,6 +63,39 @@ Rendered examples live in `samples/`. Regenerate them with:
 python3 scripts/render_samples.py
 ```
 
+## systemd deployment
+
+The `systemd/` directory contains a hardened oneshot service and timer for
+generating the EP1 page every 5 minutes. The unit assumes the application is
+installed at `/opt/ohff-teletext` with its virtual environment at
+`/opt/ohff-teletext/.venv`.
+
+The service runs as a dynamic unprivileged user, fetches the WWFF JSON feeds
+over HTTPS, and writes only to its runtime directory. The generated file is:
+
+```sh
+/run/ohff-teletext/page.ep1
+```
+
+Install and enable the timer on a systemd host:
+
+```sh
+sudo cp systemd/ohff-teletext.service systemd/ohff-teletext.timer /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now ohff-teletext.timer
+```
+
+Run one generation manually and check the output:
+
+```sh
+sudo systemctl start ohff-teletext.service
+stat --format='%s bytes' /run/ohff-teletext/page.ep1
+```
+
+The output path is under `/run`, so it is intentionally recreated after boot.
+Another service can consume `/run/ohff-teletext/page.ep1` after this timer has
+generated it.
+
 ## Tests
 
 ```sh
