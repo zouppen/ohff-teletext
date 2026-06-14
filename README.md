@@ -66,16 +66,14 @@ python3 scripts/render_samples.py
 ## systemd deployment
 
 The `systemd/` directory contains a hardened oneshot service and timer for
-generating the EP1 page every 5 minutes. The unit assumes the application is
+generating the EP1 page every 3 minutes. The unit assumes the application is
 installed at `/opt/ohff-teletext` with its virtual environment at
 `/opt/ohff-teletext/.venv`.
 
-The service runs as a dynamic unprivileged user, fetches the WWFF JSON feeds
-over HTTPS, and writes only to its runtime directory. The generated file is:
-
-```sh
-/run/ohff-teletext/page.ep1
-```
+The service fetches the WWFF JSON feeds over HTTPS, and writes only to
+its runtime directory. Edit service file so it matches teletext
+service user and group, update paths to this and the
+[ylettv-cli](https://github.com/zouppen/ylettv-cli) upload utility.
 
 Install and enable the timer on a systemd host:
 
