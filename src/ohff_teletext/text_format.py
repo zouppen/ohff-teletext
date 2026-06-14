@@ -84,7 +84,7 @@ def format_page_ep1(page: PageData, subpage: str) -> bytes:
             COLOUR_BLUE
             + bytes([NEW_BACKGROUND])
             + COLOUR_WHITE
-            + encode_teletext(" FINNISH FLORA & FAUNA - OHFF.fi", LINE_WIDTH - 3)
+            + encode_teletext(" Finnish Flora & Fauna - OHFF.fi", LINE_WIDTH - 3)
         ),
     ]
     body_rows = list(format_body_ep1(page["entries"], page_time))[:EP1_BODY_ROWS]

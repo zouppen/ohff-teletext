@@ -42,7 +42,7 @@ def test_format_page_ep1_is_one_fixed_size_teletext_page() -> None:
     assert output.startswith(EP1_PREFIX)
     assert output.endswith(EP1_SUFFIX)
     assert len(output) == len(EP1_PREFIX) + EP1_PAGE_ROWS * LINE_WIDTH + len(EP1_SUFFIX)
-    assert b"FINNISH FLORA & FAUNA - OHFF.fi" in output
+    assert b"Finnish Flora & Fauna - OHFF.fi" in output
     assert b"OH2[[NI/P" in output
 
 
@@ -69,7 +69,7 @@ def test_format_page_ep1_uses_corrected_header_and_footer_layout() -> None:
     assert rows[0] == b" " * LINE_WIDTH
     assert visible_ep1_row(rows[1]) == "    Puskatutka    Päivitetty 16:15 590/1"
     assert visible_ep1_row(rows[2]) == " " * LINE_WIDTH
-    assert visible_ep1_row(rows[3]) == "    FINNISH FLORA & FAUNA - OHFF.fi     "
+    assert visible_ep1_row(rows[3]) == "    Finnish Flora & Fauna - OHFF.fi     "
     assert visible_ep1_row(rows[4]) == " " * LINE_WIDTH
     assert visible_ep1_row(rows[5]) == " *  Puskassa nyt!                       "
     assert visible_ep1_row(rows[22]) == " Tiedot: spots.wwff.co                  "
