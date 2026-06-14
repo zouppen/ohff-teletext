@@ -13,8 +13,8 @@ LINE_WIDTH = 40
 EP1_PREFIX = b"\xfe\x01\x18\x00\x00\x00"
 EP1_SUFFIX = b"\x00\x00"
 EP1_PAGE_ROWS = 25
-EP1_HEADER_ROWS = 2
-EP1_FOOTER_ROWS = 2
+EP1_HEADER_ROWS = 4
+EP1_FOOTER_ROWS = 3
 EP1_BODY_ROWS = EP1_PAGE_ROWS - EP1_HEADER_ROWS - EP1_FOOTER_ROWS
 
 COLOUR_RED = b"\x01"
@@ -59,16 +59,26 @@ def format_page_text(page: PageData) -> str:
 def format_page_ep1(page: PageData, subpage: str) -> bytes:
     page_time = local_time(page["page_time"])
     rows = [
+        b" " * LINE_WIDTH,
         ep1_row(
-            b" "
-            + COLOUR_YELLOW
-            + encode_teletext("OHFF", 8)
+            COLOUR_GREEN
+            + bytes([NEW_BACKGROUND])
             + COLOUR_BLUE
+            + b"\x0d"
+            + encode_teletext("Puskatutka", 10)
+            + b"\x0c "
+            + COLOUR_GREEN
+            + bytes([BLACK_BACKGROUND])
             + b"P{ivitetty "
             + page_time.strftime("%H:%M").encode("ascii")
-            + b" "
             + COLOUR_WHITE
-            + encode_teletext(subpage, 6, align=">")
+            + encode_teletext(subpage, 5)
+        ),
+        ep1_row(
+            COLOUR_GREEN
+            + bytes([NEW_BACKGROUND])
+            + b" " * 15
+            + bytes([BLACK_BACKGROUND])
         ),
         ep1_row(
             COLOUR_BLUE
@@ -84,6 +94,7 @@ def format_page_ep1(page: PageData, subpage: str) -> bytes:
         [
             ep1_row(COLOUR_CYAN + b"Tiedot: spots.wwff.co"),
             ep1_row(COLOUR_CYAN + b"Ajat Suomen aikaa (SA)"),
+            b" " * LINE_WIDTH,
         ]
     )
     return EP1_PREFIX + b"".join(rows) + EP1_SUFFIX
@@ -275,15 +286,14 @@ def format_entry_ep1(entry: PageEntry, page_time: datetime) -> list[bytes]:
         return [
             ep1_row(b" " * LINE_WIDTH),
             ep1_row(
-                b" "
-                + COLOUR_YELLOW
+                COLOUR_YELLOW
                 + b"* "
                 + COLOUR_WHITE
-                + encode_teletext(entry["title"], LINE_WIDTH - 3, align="<")
+                + encode_teletext(entry["title"], LINE_WIDTH - 2, align="<")
             )
         ]
     if entry["type"] == "message":
-        return [ep1_row(b" " + COLOUR_WHITE + encode_teletext(entry["text"], 38))]
+        return [ep1_row(COLOUR_WHITE + encode_teletext(entry["text"], 39))]
     if entry["type"] == "spot":
         return format_spot_ep1(entry)
     return format_agenda_ep1(entry, page_time)
@@ -295,8 +305,7 @@ def format_spot_ep1(entry: SpotEntry) -> list[bytes]:
     activator_width = 8 if entry["section"] == "today" else 9
     return [
         ep1_row(
-            b" "
-            + COLOUR_YELLOW
+            COLOUR_YELLOW
             + encode_teletext(frequency, frequency_width, align="<")
             + COLOUR_YELLOW
             + encode_teletext(mode, 4, align="<")
@@ -317,8 +326,7 @@ def format_agenda_ep1(entry: AgendaEntry, page_time: datetime) -> list[bytes]:
     detail_width = 35 - start_width - activator_width - 9
     return [
         ep1_row(
-            b" "
-            + COLOUR_YELLOW
+            COLOUR_YELLOW
             + encode_teletext(start_text, start_width, align="<")
             + COLOUR_WHITE
             + encode_teletext(activator, activator_width, align="<")
